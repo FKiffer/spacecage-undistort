@@ -173,7 +173,8 @@ class UndistortionPipeline:
     def undistort_video(
         self,
         output_path: str,
-        use_existing_calibration: bool = False
+        use_existing_calibration: bool = False,
+        crf: int = 25
     ) -> None:
         """
         Undistort the entire video.
@@ -181,6 +182,7 @@ class UndistortionPipeline:
         Args:
             output_path: Path for output video file
             use_existing_calibration: If True and calibration_path exists, load it
+            crf: Constant Rate Factor for video encoding (default 25, lower = higher quality)
         """
         # Ensure we have calibration
         if self.map1 is None or self.map2 is None:
@@ -202,7 +204,7 @@ class UndistortionPipeline:
         print(f"Processing video ({len(video)} frames at {fps:.2f} FPS)...")
         print(f"Output: {output_path}")
 
-        with sio.VideoWriter(str(output_path), fps=fps) as writer:
+        with sio.VideoWriter(str(output_path), fps=fps, crf=crf) as writer:
             for frame in tqdm(video, desc="Undistorting frames"):
                 undistorted = undistort_image(frame, self.map1, self.map2)
                 writer(undistorted)

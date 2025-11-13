@@ -77,6 +77,13 @@ Examples:
         help='Physical side length of grid squares in meters (default: 0.01 = 1cm)'
     )
 
+    parser.add_argument(
+        '--crf',
+        type=int,
+        default=25,
+        help='Constant Rate Factor for video encoding (default: 25, lower = higher quality, range: 0-51)'
+    )
+
     args = parser.parse_args()
 
     # Validate inputs
@@ -124,7 +131,8 @@ Examples:
             print("=" * 60)
             pipeline.undistort_video(
                 output_path=str(output_path),
-                use_existing_calibration=True
+                use_existing_calibration=True,
+                crf=args.crf
             )
             print()
             print("=" * 60)
